@@ -126,7 +126,7 @@ void MAX30102::setPulseAmplitudeProximity(uint8_t amplitude)
 {
     writeRegister8(Wire, MAX30102_LED_PROX_AMP, amplitude);
 }
-void MAX30105::enableSlot(uint8_t slotNumber, uint8_t device)
+void MAX30102::enableSlot(uint8_t slotNumber, uint8_t device)
 {
     switch (slotNumber)
     {
