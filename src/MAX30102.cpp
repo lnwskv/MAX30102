@@ -4,10 +4,10 @@ MAX30102::MAX30102()
 {
 }
 
-bool MAX30102::begin(uint8_t MAX30102_ADDRESS, uint8_t MAX30102_REGISTER, uint32_t I2C_SPEED)
+bool MAX30102::begin(uint32_t I2C_SPEED)
 {
     Wire.begin();
-    if (readRegister8(MAX30102_ADDRESS, MAX30102_REGISTER) != MAX30102_EXPECTEDPARTID) // ติดต่อการสื่อสารกับ MAX30102 ได้หรือไม่
+    if (readRegister8(MAX30102_I2C_ADDRESS, MAX30102_PARTID_REGISTER) != MAX30102_EXPECTEDPARTID) // ติดต่อการสื่อสารกับ MAX30102 ได้หรือไม่
         return false;
 
     Wire.setClock(I2C_SPEED);
