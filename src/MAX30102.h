@@ -29,6 +29,10 @@ public:
     bool begin(uint32_t I2C_SPEED = I2C_SPEED_STANDARD);
     void setup(byte powerLevel = 0x1F, byte sampleAverage = 4, byte ledMode = 3, int sampleRate = 400, int pulseWidth = 411, int adcRange = 4096);
 
+    //Data
+    bool checkData(uint8_t maxTimeToCheck);
+    uint32_t getIR(void); //Returns immediate IR value
+
     // Low-level I2C communication
     uint8_t readRegister8(uint8_t address, uint8_t reg);
     void writeRegister8(uint8_t address, uint8_t reg, uint8_t value);
@@ -41,6 +45,7 @@ public:
 
     // FIFO reading
     uint16_t fillFIFO(void);
+    
 
     // Configurations
     byte activeLEDs;
@@ -55,6 +60,7 @@ public:
     void setPulseAmplitudeGreen(uint8_t value);
     void setPulseAmplitudeProximity(uint8_t value);
 
+private:
 #define STORAGE_SIZE 4
     typedef struct Record
     {

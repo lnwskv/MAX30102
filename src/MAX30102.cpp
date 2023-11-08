@@ -31,6 +31,7 @@ bool MAX30102::begin(uint32_t I2C_SPEED)
         return false;
 
     Wire.setClock(I2C_SPEED);
+    _i2caddr = i2caddr;
     return true;
 }
 
@@ -181,12 +182,95 @@ uint16_t MAX30102::fillFIFO(void)
         Wire.write(MAX30102_FIFODATA);
         Wire.endTransmission();
 
-        while (bytesLeftToRead > 0){
+        while (bytesLeftToRead > 0)
+        {
             int bytesToGet = bytesLeftToRead;
 
-            
+            if (bytesToGet > I2C_BUFFER_LENGTH)
+            {
+                bytesToGet = I2C_BUFFER_LENGTH - (I2C_BUFFER_LENGTH % (activeLEDs * 3)); // Trim toGet to be a multiple of the samples we need to read
+            }
+            bytesLeftToRead -= bytesToGet;
+
+            Wire.requestFrom(MAX30102_I2C_ADDRESS, bytesToGet);
+
+            while (bytesToGet > 0)
+            {
+                sense.head++;               // Advance the head of the storage struct
+                sense.head %= STORAGE_SIZE; // Wrap condition
+
+                byte temp[sizeof(uint32_t)]; // Array of 4 bytes that we will convert into long
+                uint32_t tempLong;
+
+                // Burst read three bytes - RED
+                temp[3] = 0;
+                temp[2] = Wire.read();
+                temp[1] = Wire.read();
+                temp[0] = Wire.read();
+                memcpy(&tempLong, temp, sizeof(tempLong));
+                tempLong &= 0x3FFFF; // Zero out all but 18 bits
+
+                sense.red[sense.head] = tempLong; // Store this reading into the sense array
+                tempLong &= 0x3FFFF;              // Zero out all but 18 bits
+                sense.IR[sense.head] = tempLong;
+
+                if (activeLEDs > 1)
+                {
+                    // Burst read three more bytes - IR
+                    temp[3] = 0;
+                    temp[2] = Wire.read();
+                    temp[1] = Wire.read();
+                    temp[0] = Wire.read();
+
+                    // Convert array to long
+                    memcpy(&tempLong, temp, sizeof(tempLong));
+
+                    tempLong &= 0x3FFFF; // Zero out all but 18 bits
+
+                    sense.IR[sense.head] = tempLong;
+                }
+                if (activeLEDs > 2)
+                {
+                    // Burst read three more bytes - Green
+                    temp[3] = 0;
+                    temp[2] = Wire.read();
+                    temp[1] = Wire.read();
+                    temp[0] = Wire.read();
+
+                    // Convert array to long
+                    memcpy(&tempLong, temp, sizeof(tempLong));
+
+                    tempLong &= 0x3FFFF; // Zero out all but 18 bits
+
+                    sense.green[sense.head] = tempLong;
+                }
+                bytesToGet -= activeLEDs * 3;
+            }
         }
     }
+    return (numberOfSamples);
+}
+bool MAX30102::checkData(uint8_t maxTimeToCheck)
+{
+    uint32_t markTime = millis();
+
+    while (1)
+    {
+        if (millis() - markTime > maxTimeToCheck)
+            return (false);
+
+        if (check() == true) // We found new data!
+            return (true);
+
+        delay(1);
+    }
+}
+uint32_t MAX30102::getIR(void)
+{
+    if (safeCheck(250))
+        return (sense.IR[sense.head]);
+    else
+        return (0);
 }
 
 void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
