@@ -29,9 +29,9 @@ public:
     bool begin(uint32_t I2C_SPEED = I2C_SPEED_STANDARD);
     void setup(byte powerLevel = 0x1F, byte sampleAverage = 4, byte ledMode = 3, int sampleRate = 400, int pulseWidth = 411, int adcRange = 4096);
 
-    //Data
+    // Data
     bool checkData(uint8_t maxTimeToCheck);
-    uint32_t getIR(void); //Returns immediate IR value
+    uint32_t getIR(void); // Returns immediate IR value
 
     // Low-level I2C communication
     uint8_t readRegister8(uint8_t address, uint8_t reg);
@@ -44,8 +44,7 @@ public:
     void clearFIFO(void);
 
     // FIFO reading
-    uint16_t fillFIFO(void);
-    
+    uint16_t CheckAndFillFIFO(void);
 
     // Configurations
     byte activeLEDs;

@@ -162,7 +162,7 @@ void MAX30102::clearFIFO(void)
     writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR, 0);
 }
 
-uint16_t MAX30102::fillFIFO(void)
+uint16_t MAX30102::CheckAndFillFIFO(void)
 {
     byte readPointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR);
     byte writePointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOWRITEPTR);
@@ -258,7 +258,7 @@ bool MAX30102::checkData(uint8_t maxTimeToCheck)
         if (millis() - markTime > maxTimeToCheck)
             return (false);
 
-        if (fillFIFO() == true) // We found new data!
+        if (CheckAndFillFIFO() == true) // We found new data!
             return (true);
 
         delay(1);
