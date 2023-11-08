@@ -166,7 +166,7 @@ void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
 {
     uint8_t byte = readRegister8(Wire, reg);
 
-    byte = originalContents & mask;
+    byte = byte & mask;
 
     writeRegister8(Wire, reg, byte | thing);
 }
