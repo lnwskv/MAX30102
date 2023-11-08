@@ -16,15 +16,16 @@ bool MAX30102::begin(uint8_t MAX30102_I2C_ADDRESS, uint8_t MAX30102_PARTID_REGIS
 
 uint8_t MAX30102::readRegister8(uint8_t address, uint8_t reg)
 {
-    Wire.beginTransmission(address); //เริ่มต้นการสื่อสารกับ I2C device 
-    Wire.write(reg); // เต้องการอ่านข้อมูลจาก registerน นั้น
-    Wire.endTransmission(false); //เปิดให้สื่อสารกับอุปกรณ์ได้เพราะยังไม่ปล่อย I2C bus
+    Wire.beginTransmission(address); // เริ่มต้นการสื่อสารกับ I2C device
+    Wire.write(reg);                 // เต้องการอ่านข้อมูลจาก registerน นั้น
+    Wire.endTransmission(false);     // เปิดให้สื่อสารกับอุปกรณ์ได้เพราะยังไม่ปล่อย I2C bus
 
-    Wire.requestFrom(address, (uint8_t)1); //ขอ 1 byte
-    if (Wire.available()) //มี 1 byte ใน buffer
+    Wire.requestFrom(address, (uint8_t)1); // ขอ 1 byte
+    if (Wire.available())                  // มี 1 byte ใน buffer
     {
-        uint8_t value = Wire.read(); 
+        uint8_t value = Wire.read();
         return value;
-    }else
+    }
+    else
         return 0;
 }
