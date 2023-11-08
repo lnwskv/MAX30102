@@ -31,7 +31,6 @@ bool MAX30102::begin(uint32_t I2C_SPEED)
         return false;
 
     Wire.setClock(I2C_SPEED);
-    _i2caddr = i2caddr;
     return true;
 }
 
@@ -259,7 +258,7 @@ bool MAX30102::checkData(uint8_t maxTimeToCheck)
         if (millis() - markTime > maxTimeToCheck)
             return (false);
 
-        if (check() == true) // We found new data!
+        if (fillFIFO() == true) // We found new data!
             return (true);
 
         delay(1);
@@ -267,7 +266,7 @@ bool MAX30102::checkData(uint8_t maxTimeToCheck)
 }
 uint32_t MAX30102::getIR(void)
 {
-    if (safeCheck(250))
+    if (checkData(250))
         return (sense.IR[sense.head]);
     else
         return (0);
