@@ -6,3 +6,5 @@
 
 #define I2C_SPEED_STANDARD 100000
 #define I2C_SPEED_FAST 400000
+
+#endif
