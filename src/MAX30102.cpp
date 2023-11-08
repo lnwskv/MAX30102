@@ -162,9 +162,36 @@ void MAX30102::clearFIFO(void)
     writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR, 0);
 }
 
+uint16_t MAX30102::fillFIFO(void)
+{
+    byte readPointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR);
+    byte writePointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOWRITEPTR);
+
+    int numberOfSamples = 0;
+
+    // มีข้อมูลใหม่เข้ามาหรือไม่
+    if (readPointer != writePointer)
+    {
+        numberOfSamples = writePointer - readPointer;
+        if (numberOfSamples < 0)
+            numberOfSamples += 32; // Wrap condition
+        int bytesLeftToRead = numberOfSamples * activeLEDs * 3;
+
+        Wire.beginTransmission(MAX30102_I2C_ADDRESS);
+        Wire.write(MAX30102_FIFODATA);
+        Wire.endTransmission();
+
+        while (bytesLeftToRead > 0){
+            int bytesToGet = bytesLeftToRead;
+
+            
+        }
+    }
+}
+
 void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
 {
-    uint8_t byte = readRegister8(MAX30102_I2C_ADDRESS, reg);
+    uint8_t byte = readRegister8(Wire, reg);
 
     byte = byte & mask;
 

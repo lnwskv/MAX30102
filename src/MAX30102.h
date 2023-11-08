@@ -1,9 +1,26 @@
-#ifndef MAX30102_h
-#define MAX30102_h
+#pragma once
 
 #include "Arduino.h"
 #include <Wire.h>
 #include "MAX30102_CONFIG.h"
+
+// Define the size of the I2C buffer based on the platform the user has
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+
+// I2C_BUFFER_LENGTH is defined in Wire.H
+#define I2C_BUFFER_LENGTH BUFFER_LENGTH
+
+#elif defined(__SAMD21G18A__)
+
+// SAMD21 uses RingBuffer.h
+#define I2C_BUFFER_LENGTH SERIAL_BUFFER_SIZE
+
+#else
+
+// The catch-all default is 32
+#define I2C_BUFFER_LENGTH 32
+
+#endif
 
 class MAX30102
 {
@@ -21,6 +38,9 @@ public:
     void setFIFOAverage(uint8_t samples);
     void enableFIFORollover();
     void clearFIFO(void);
+
+    // FIFO reading
+    uint16_t fillFIFO(void);
 
     // Configurations
     byte activeLEDs;
@@ -47,5 +67,3 @@ public:
 
     sense_struct sense;
 };
-
-#endif
