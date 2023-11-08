@@ -36,8 +36,8 @@ bool MAX30102::begin(uint32_t I2C_SPEED)
 
 void MAX30102::setup(byte powerLevel, byte sampleAverage, byte ledMode, int sampleRate, int pulseWidth, int adcRange)
 {
-    setFIFOAverage(MAX30102_SAMPLEAVG_4)
-        enableFIFORollover();
+    setFIFOAverage(MAX30102_SAMPLEAVG_4);
+    enableFIFORollover();
 
     if (ledMode == 3)
         setLEDMode(0x07); // Watch all three LED channels
@@ -112,19 +112,19 @@ void MAX30102::setPulseWidth(uint8_t pulseWidth)
 }
 void MAX30102::setPulseAmplitudeRed(uint8_t amplitude)
 {
-    writeRegister8(Wire, MAX30102_LED1_PULSEAMP, amplitude);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED1_PULSEAMP, amplitude);
 }
 void MAX30102::setPulseAmplitudeIR(uint8_t amplitude)
 {
-    writeRegister8(Wire, MAX30102_LED2_PULSEAMP, amplitude);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED2_PULSEAMP, amplitude);
 }
 void MAX30102::setPulseAmplitudeGreen(uint8_t amplitude)
 {
-    writeRegister8(Wire, MAX30102_LED3_PULSEAMP, amplitude);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED3_PULSEAMP, amplitude);
 }
 void MAX30102::setPulseAmplitudeProximity(uint8_t amplitude)
 {
-    writeRegister8(Wire, MAX30102_LED_PROX_AMP, amplitude);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED_PROX_AMP, amplitude);
 }
 void MAX30102::enableSlot(uint8_t slotNumber, uint8_t device)
 {
@@ -157,9 +157,9 @@ void MAX30102::enableFIFORollover(void)
 }
 void MAX30102::clearFIFO(void)
 {
-    writeRegister8(Wire, MAX30102_FIFOWRITEPTR, 0);
-    writeRegister8(Wire, MAX30102_FIFOOVERFLOW, 0);
-    writeRegister8(Wire, MAX30102_FIFOREADPTR, 0);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOWRITEPTR, 0);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOOVERFLOW, 0);
+    writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR, 0);
 }
 
 void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
@@ -168,7 +168,7 @@ void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
 
     byte = byte & mask;
 
-    writeRegister8(Wire, reg, byte | thing);
+    writeRegister8(MAX30102_I2C_ADDRESS, reg, byte | thing);
 }
 uint8_t MAX30102::readRegister8(uint8_t address, uint8_t reg)
 {
