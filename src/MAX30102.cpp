@@ -164,7 +164,7 @@ void MAX30102::clearFIFO(void)
 
 void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing)
 {
-    uint8_t byte = readRegister8(Wire, reg);
+    uint8_t byte = readRegister8(MAX30102_I2C_ADDRESS, reg);
 
     byte = byte & mask;
 
