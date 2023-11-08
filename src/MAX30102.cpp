@@ -54,11 +54,11 @@ void MAX30102::setup(byte powerLevel, byte sampleAverage, byte ledMode, int samp
 
     if (adcRange == 4096)
     {
-        setADCRange(MAX30102_ADCRANGE_4096)
+        setADCRange(MAX30102_ADCRANGE_4096);
     }
     else
     {
-        setADCRange(MAX30102_ADCRANGE_2048)
+        setADCRange(MAX30102_ADCRANGE_2048);
     }
 
     if (sampleRate == 400)
@@ -67,7 +67,7 @@ void MAX30102::setup(byte powerLevel, byte sampleAverage, byte ledMode, int samp
     }
     else
     {
-        setSampleRate(MAX30102_SAMPLERATE_50)
+        setSampleRate(MAX30102_SAMPLERATE_50);
     }
 
     if (pulseWidth == 411)
