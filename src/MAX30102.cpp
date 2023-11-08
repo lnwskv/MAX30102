@@ -187,8 +187,8 @@ uint8_t MAX30102::readRegister8(uint8_t address, uint8_t reg)
 }
 void MAX30102::writeRegister8(uint8_t address, uint8_t reg, uint8_t value)
 {
-    _i2cPort->beginTransmission(address);
-    _i2cPort->write(reg);
-    _i2cPort->write(value);
-    _i2cPort->endTransmission();
+    Wire.beginTransmission(address);
+    Wire.write(reg);
+    Wire.write(value);
+    Wire.endTransmission();
 }
