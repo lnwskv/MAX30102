@@ -10,9 +10,42 @@ class MAX30102
 public:
     MAX30102(void);
     bool begin(uint32_t I2C_SPEED = I2C_SPEED_STANDARD);
+    void setup(byte powerLevel = 0x1F, byte sampleAverage = 4, byte ledMode = 3, int sampleRate = 400, int pulseWidth = 411, int adcRange = 4096);
 
     // Low-level I2C communication
     uint8_t readRegister8(uint8_t address, uint8_t reg);
+    void writeRegister8(uint8_t address, uint8_t reg, uint8_t value);
+    void bitMask(uint8_t reg, uint8_t mask, uint8_t thing);
+
+    // FIFO
+    void setFIFOAverage(uint8_t samples);
+    void enableFIFORollover();
+    void clearFIFO(void);
+
+    // Configurations
+    byte activeLEDs;
+    void setLEDMode(uint8_t mode);
+    void setADCRange(uint8_t adcRange);
+    void setSampleRate(uint8_t sampleRate);
+    void setPulseWidth(uint8_t pulseWidth);
+
+    void enableSlot(uint8_t slotNumber, uint8_t device);
+    void setPulseAmplitudeRed(uint8_t value);
+    void setPulseAmplitudeIR(uint8_t value);
+    void setPulseAmplitudeGreen(uint8_t value);
+    void setPulseAmplitudeProximity(uint8_t value);
+
+#define STORAGE_SIZE 4
+    typedef struct Record
+    {
+        uint32_t red[STORAGE_SIZE];
+        uint32_t IR[STORAGE_SIZE];
+        uint32_t green[STORAGE_SIZE];
+        byte head;
+        byte tail;
+    } sense_struct; // This is our circular buffer of readings from the sensor
+
+    sense_struct sense;
 };
 
 #endif
