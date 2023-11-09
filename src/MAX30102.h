@@ -63,7 +63,7 @@ private:
 #define STORAGE_SIZE 4
     typedef struct Record
     {
-        uint32_t red[STORAGE_SIZE];
+        uint32_t red[STORAGE_SIZE]; //4bytes
         uint32_t IR[STORAGE_SIZE];
         uint32_t green[STORAGE_SIZE];
         byte head;

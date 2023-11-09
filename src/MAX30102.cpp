@@ -109,6 +109,8 @@ void MAX30102::clearFIFO(void){
 }
 
 uint16_t MAX30102::checkAndFillFIFO(void){
+    //The circular FIFO depth is 32 and can hold up to 32 samples of data.
+    // FIFO Data Contains 3 Bytes per Channel
     byte readPointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOREADPTR);
     byte writePointer = readRegister8(MAX30102_I2C_ADDRESS, MAX30102_FIFOWRITEPTR);
 
@@ -120,7 +122,7 @@ uint16_t MAX30102::checkAndFillFIFO(void){
         numberOfSamples = writePointer - readPointer;
         if (numberOfSamples < 0)
             numberOfSamples += 32; // Wrap condition
-        int bytesLeftToRead = numberOfSamples * activeLEDs * 3;
+        int bytesLeftToRead = numberOfSamples * (activeLEDs * 3);
 
         Wire.beginTransmission(MAX30102_I2C_ADDRESS);
         Wire.write(MAX30102_FIFODATA);
@@ -130,13 +132,13 @@ uint16_t MAX30102::checkAndFillFIFO(void){
         {
             int bytesToGet = bytesLeftToRead;
 
-            if (bytesToGet > I2C_BUFFER_LENGTH)
+            if (bytesToGet > I2C_BUFFER_LENGTH) //FIFO buffer of MAX30102 and I2C buffer is different 
             {
                 bytesToGet = I2C_BUFFER_LENGTH - (I2C_BUFFER_LENGTH % (activeLEDs * 3)); // Trim toGet to be a multiple of the samples we need to read
             }
             bytesLeftToRead -= bytesToGet;
 
-            Wire.requestFrom(MAX30102_I2C_ADDRESS, bytesToGet);
+            Wire.requestFrom(MAX30102_I2C_ADDRESS, bytesToGet); //we request ... bytes
 
             while (bytesToGet > 0)
             {
@@ -152,7 +154,7 @@ uint16_t MAX30102::checkAndFillFIFO(void){
                 temp[1] = Wire.read();
                 temp[0] = Wire.read();
                 memcpy(&tempLong, temp, sizeof(tempLong));
-                tempLong &= 0x3FFFF; // Zero out all but 18 bits
+                tempLong &= 0x3FFFF; // Zero out all but 18 bits, 0b111111111111111111
 
                 sense.red[sense.head] = tempLong; // Store this reading into the sense array
                 tempLong &= 0x3FFFF;              // Zero out all but 18 bits
