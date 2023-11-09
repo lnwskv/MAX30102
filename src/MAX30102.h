@@ -34,6 +34,7 @@ public:
     uint32_t getRed(void); //Returns immediate red value
     uint32_t getIR(void); // Returns immediate IR value
     uint32_t getGreen(void); //Returns immediate green value
+    uint32_t getTailIR(void);
 
     // FIFO
     void setFIFOAverage(uint8_t samples);
