@@ -202,7 +202,7 @@ bool MAX30102::checkData(uint8_t maxTimeToCheck){
         if (millis() - markTime > maxTimeToCheck)
             return (false);
 
-        if (CheckAndFillFIFO() == true) // We found new data!
+        if (checkAndFillFIFO() == true) // We found new data!
             return (true);
 
         delay(1);
@@ -222,7 +222,7 @@ uint32_t MAX30102::getIR(void){
 }
 uint32_t MAX30102::getGreen(void)
 {
-  if(safeCheck(250))
+  if(checkData(250))
     return (sense.green[sense.head]);
   else
     return(0);

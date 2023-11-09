@@ -61,8 +61,8 @@
 #define MAX30102_LED3_PULSEAMP 0x0E
 #define MAX30102_LED_PROX_AMP 0x10
 
-#define SLOT_RED_LED = 0x01
-#define SLOT_IR_LED = 0x02
-#define SLOT_GREEN_LED = 0x03
+#define SLOT_RED_LED  0x01
+#define SLOT_IR_LED  0x02
+#define SLOT_GREEN_LED 0x03
 
 #endif
