@@ -53,7 +53,7 @@ void MAX30102::setup(byte powerLevel, byte sampleAverage, byte ledMode, int samp
     clearFIFO();
 }
 void MAX30102::setLEDMode(uint8_t mode){ // set MAX30102 reference from datasheet
-    bitMask(MAX30105_MODECONFIG, MAX30102_MODE_MASK, mode);
+    bitMask(MAX30102_MODECONFIG, MAX30102_MODE_MASK, mode);
 }
 void MAX30102::enableSlot(uint8_t slotNumber, uint8_t device){
     switch (slotNumber)
@@ -94,6 +94,14 @@ void MAX30102::setPulseAmplitudeGreen(uint8_t amplitude){
 }
 void MAX30102::setPulseAmplitudeProximity(uint8_t amplitude){
     writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED_PROX_AMP, amplitude);
+}
+
+void MAX30102::shutDown(void) {
+  // Put IC into low power mode
+  bitMask(MAX30102_MODECONFIG, MAX30102_SHUTDOWN_MASK, MAX30102_SHUTDOWN);
+}
+void MAX30105::wakeUp(void) {
+  bitMask(MAX30102_MODECONFIG, MAX30102_SHUTDOWN_MASK, MAX30102_WAKEUP);
 }
 
 uint8_t MAX30102::available(void){

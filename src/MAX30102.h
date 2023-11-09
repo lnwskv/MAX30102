@@ -35,7 +35,7 @@ public:
     uint32_t getIR(void);    // Returns immediate IR value
     uint32_t getGreen(void); // Returns immediate green value
     uint32_t getTailIR(void);
-    uint32_t getTailRed(void); 
+    uint32_t getTailRed(void);
 
     // FIFO
     uint8_t available(void); // มีกี่ sample ให้ใช้งาน
@@ -57,6 +57,10 @@ public:
     void setPulseAmplitudeIR(uint8_t value);
     void setPulseAmplitudeGreen(uint8_t value);
     void setPulseAmplitudeProximity(uint8_t value);
+
+    // Power Saving
+    void shutDown();
+    void wakeUp();
 
     // low-level I2C communication
     uint8_t readRegister8(uint8_t address, uint8_t reg);
