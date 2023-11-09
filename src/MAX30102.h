@@ -35,6 +35,7 @@ public:
     uint32_t getIR(void);    // Returns immediate IR value
     uint32_t getGreen(void); // Returns immediate green value
     uint32_t getTailIR(void);
+    uint32_t getTailRed(void); 
 
     // FIFO
     uint8_t available(void); // มีกี่ sample ให้ใช้งาน
