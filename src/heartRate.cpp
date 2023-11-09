@@ -18,7 +18,7 @@ uint8_t offset = 0;
 
 static const uint16_t FIRCoeffs[12] = {172, 321, 579, 927, 1360, 1858, 2390, 2916, 3391, 3768, 4012, 4096}; // low-pass Finite Impulse Response สำหรับประมวลผลสัญญาณ
 
-bool detectHeartBeat(int32_t sample)
+bool DetectHeartBeat(int32_t sample)
 {
   bool beatDetected = false;
 
@@ -49,13 +49,18 @@ bool detectHeartBeat(int32_t sample)
     IR_AC_Signal_min = 0;
   }
 
-  //  Find Minimum value in negative cycle
   /*
     0 & 0 results in 0
     0 & 1 results in 0
     1 & 0 results in 0
     1 & 1 results in 1
   */
+  //  Find Maximum value in positive cycle
+  if (positiveEdge & (IR_AC_Signal_Current > IR_AC_Signal_Previous))
+  {
+    IR_AC_Signal_max = IR_AC_Signal_Current;
+  }
+  //  Find Minimum value in negative cycle
   if (negativeEdge & (IR_AC_Signal_Current < IR_AC_Signal_Previous))
   {
     IR_AC_Signal_min = IR_AC_Signal_Current;
