@@ -31,12 +31,14 @@ public:
 
     // get data
     bool checkData(uint8_t maxTimeToCheck);
-    uint32_t getRed(void); //Returns immediate red value
-    uint32_t getIR(void); // Returns immediate IR value
-    uint32_t getGreen(void); //Returns immediate green value
+    uint32_t getRed(void);   // Returns immediate red value
+    uint32_t getIR(void);    // Returns immediate IR value
+    uint32_t getGreen(void); // Returns immediate green value
     uint32_t getTailIR(void);
 
     // FIFO
+    uint8_t available(void); // มีกี่ sample ให้ใช้งาน
+    void nextSample(void);   // Advances the tail of the sense array
     void setFIFOAverage(uint8_t samples);
     void enableFIFORollover();
     void clearFIFO(void);
@@ -64,7 +66,7 @@ private:
 #define STORAGE_SIZE 4
     typedef struct Record
     {
-        uint32_t red[STORAGE_SIZE]; //4bytes
+        uint32_t red[STORAGE_SIZE]; // 4bytes
         uint32_t IR[STORAGE_SIZE];
         uint32_t green[STORAGE_SIZE];
         byte head;

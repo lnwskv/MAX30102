@@ -96,6 +96,19 @@ void MAX30102::setPulseAmplitudeProximity(uint8_t amplitude){
     writeRegister8(MAX30102_I2C_ADDRESS, MAX30102_LED_PROX_AMP, amplitude);
 }
 
+uint8_t MAX30102::available(void){
+  int8_t numberOfSamples = sense.head - sense.tail;
+  if (numberOfSamples < 0) numberOfSamples += STORAGE_SIZE;
+
+  return (numberOfSamples);
+}
+void MAX30102::nextSample(void){
+  if(available()) //Only advance the tail if new data is available
+  {
+    sense.tail++;
+    sense.tail %= STORAGE_SIZE; //Wrap condition
+  }
+}
 void MAX30102::setFIFOAverage(uint8_t numberOfSamples){
     bitMask(MAX30102_FIFOCONFIG, MAX30102_SAMPLEAVG_MASK, numberOfSamples); // set sample average
 }
@@ -233,7 +246,6 @@ uint32_t MAX30102::getTailIR(void)
 {
   return (sense.IR[sense.tail]);
 }
-
 
 void MAX30102::bitMask(uint8_t reg, uint8_t mask, uint8_t thing){ 
     uint8_t byte = readRegister8(MAX30102_I2C_ADDRESS, reg); //อ่านข้อมูลปัจจุบันของ register
