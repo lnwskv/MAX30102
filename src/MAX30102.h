@@ -4,20 +4,19 @@
 #include <Wire.h>
 #include "MAX30102_CONFIG.h"
 
-// Define the size of the I2C buffer based on the platform the user has
+// กำหนดขนาด I2C buffer โดยขึ้นกับอุปกรณ์ของผู้ใช้งาน
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
 
-// I2C_BUFFER_LENGTH is defined in Wire.H
+// I2C_BUFFER_LENGTH มีอยู่ใน Wire.H
 #define I2C_BUFFER_LENGTH BUFFER_LENGTH
 
 #elif defined(__SAMD21G18A__)
 
-// SAMD21 uses RingBuffer.h
+// SAMD21 ใช้ RingBuffer.h
 #define I2C_BUFFER_LENGTH SERIAL_BUFFER_SIZE
 
 #else
 
-// The catch-all default is 32
 #define I2C_BUFFER_LENGTH 32
 
 #endif
@@ -25,28 +24,24 @@
 class MAX30102
 {
 public:
+    // initialize
     MAX30102(void);
     bool begin(uint32_t I2C_SPEED = I2C_SPEED_STANDARD);
     void setup(byte powerLevel = 0x1F, byte sampleAverage = 4, byte ledMode = 3, int sampleRate = 400, int pulseWidth = 411, int adcRange = 4096);
 
-    // Data
+    // get data
     bool checkData(uint8_t maxTimeToCheck);
+    uint32_t getRed(void); //Returns immediate red value
     uint32_t getIR(void); // Returns immediate IR value
-
-    // Low-level I2C communication
-    uint8_t readRegister8(uint8_t address, uint8_t reg);
-    void writeRegister8(uint8_t address, uint8_t reg, uint8_t value);
-    void bitMask(uint8_t reg, uint8_t mask, uint8_t thing);
+    uint32_t getGreen(void); //Returns immediate green value
 
     // FIFO
     void setFIFOAverage(uint8_t samples);
     void enableFIFORollover();
     void clearFIFO(void);
+    uint16_t checkAndFillFIFO(void);
 
-    // FIFO reading
-    uint16_t CheckAndFillFIFO(void);
-
-    // Configurations
+    // configurations
     byte activeLEDs;
     void setLEDMode(uint8_t mode);
     void setADCRange(uint8_t adcRange);
@@ -59,6 +54,11 @@ public:
     void setPulseAmplitudeGreen(uint8_t value);
     void setPulseAmplitudeProximity(uint8_t value);
 
+    // low-level I2C communication
+    uint8_t readRegister8(uint8_t address, uint8_t reg);
+    void writeRegister8(uint8_t address, uint8_t reg, uint8_t value);
+    void bitMask(uint8_t reg, uint8_t mask, uint8_t thing);
+
 private:
 #define STORAGE_SIZE 4
     typedef struct Record
@@ -68,7 +68,7 @@ private:
         uint32_t green[STORAGE_SIZE];
         byte head;
         byte tail;
-    } sense_struct; // This is our circular buffer of readings from the sensor
+    } sense_struct; // circular buffer that read and stire value of sensor
 
     sense_struct sense;
 };
