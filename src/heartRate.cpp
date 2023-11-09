@@ -18,11 +18,12 @@ uint8_t offset = 0;
 
 static const uint16_t FIRCoeffs[12] = {172, 321, 579, 927, 1360, 1858, 2390, 2916, 3391, 3768, 4012, 4096}; // low-pass Finite Impulse Response สำหรับประมวลผลสัญญาณ
 
-bool DetectHeartBeat(int32_t sample)
+bool checkForBeat(int32_t sample)
 {
   bool beatDetected = false;
+   IR_AC_Signal_Previous = IR_AC_Signal_Current;
 
-  IR_Average_Estimated = avgDC_Estimator(&ir_avg_reg, sample);
+  IR_Average_Estimated = averageDCEstimator(&ir_avg_reg, sample);
   IR_AC_Signal_Current = lowPassFIRFilter(sample - IR_Average_Estimated);
 
   //  Detect (rising edge)
@@ -55,11 +56,13 @@ bool DetectHeartBeat(int32_t sample)
     1 & 0 results in 0
     1 & 1 results in 1
   */
+
   //  Find Maximum value in positive cycle
   if (positiveEdge & (IR_AC_Signal_Current > IR_AC_Signal_Previous))
   {
     IR_AC_Signal_max = IR_AC_Signal_Current;
   }
+
   //  Find Minimum value in negative cycle
   if (negativeEdge & (IR_AC_Signal_Current < IR_AC_Signal_Previous))
   {
@@ -70,7 +73,7 @@ bool DetectHeartBeat(int32_t sample)
 }
 
 // estimates the avg DC of the signal using a moving average.
-int16_t avgDC_Estimator(int32_t *p, uint16_t x)
+int16_t averageDCEstimator(int32_t *p, uint16_t x)
 {
   *p += ((((long)x << 15) - *p) >> 4);
   return (*p >> 15);
