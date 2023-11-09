@@ -36,7 +36,7 @@ bool detectHeartBeat(int32_t sample)
     negativeEdge = 0;
     IR_AC_Signal_max = 0;
 
-    if (((IR_AC_Max - IR_AC_Min) > 20) & ((IR_AC_Max - IR_AC_Min) < 1000))
+    if ((IR_AC_Max - IR_AC_Min) > 20 & (IR_AC_Max - IR_AC_Min) < 1000)
     {
       beatDetected = true;
     }
