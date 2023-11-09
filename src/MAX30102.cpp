@@ -100,7 +100,7 @@ void MAX30102::shutDown(void) {
   // Put IC into low power mode
   bitMask(MAX30102_MODECONFIG, MAX30102_SHUTDOWN_MASK, MAX30102_SHUTDOWN);
 }
-void MAX30105::wakeUp(void) {
+void MAX30102::wakeUp(void) {
   bitMask(MAX30102_MODECONFIG, MAX30102_SHUTDOWN_MASK, MAX30102_WAKEUP);
 }
 
