@@ -175,11 +175,9 @@ uint16_t MAX30102::checkAndFillFIFO(void){
                 temp[1] = Wire.read();
                 temp[0] = Wire.read();
                 memcpy(&tempLong, temp, sizeof(tempLong));
-                tempLong &= 0x3FFFF; // Zero out all but 18 bits, 0b111111111111111111
 
+                tempLong &= 0x3FFFF; // Zero out all but 18 bits, 0b111111111111111111
                 sense.red[sense.head] = tempLong; // Store this reading into the sense array
-                tempLong &= 0x3FFFF;              // Zero out all but 18 bits
-                sense.IR[sense.head] = tempLong;
 
                 if (activeLEDs > 1)
                 {
@@ -193,7 +191,6 @@ uint16_t MAX30102::checkAndFillFIFO(void){
                     memcpy(&tempLong, temp, sizeof(tempLong));
 
                     tempLong &= 0x3FFFF; // Zero out all but 18 bits
-
                     sense.IR[sense.head] = tempLong;
                 }
                 if (activeLEDs > 2)
@@ -208,7 +205,6 @@ uint16_t MAX30102::checkAndFillFIFO(void){
                     memcpy(&tempLong, temp, sizeof(tempLong));
 
                     tempLong &= 0x3FFFF; // Zero out all but 18 bits
-
                     sense.green[sense.head] = tempLong;
                 }
                 bytesToGet -= activeLEDs * 3;
